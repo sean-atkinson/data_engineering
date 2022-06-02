@@ -22,7 +22,7 @@ OUTPUT_TEMPLATE = AIRFLOW_HOME + '/taxi+_zone_lookup.csv'
 
 zones = DAG(
     'upload_zones_data',
-    start_date=datetime(2022, 1, 1),
+    start_date=datetime(2019, 1, 1),
     schedule_interval="@once",
     max_active_runs=3, 
     catchup=True
@@ -52,20 +52,20 @@ with zones:
             "file_": f"{AIRFLOW_HOME}/{data_file}"
         }
     )
-    upload_big_query_task = BigQueryCreateExternalTableOperator(
-        task_id='upload_big_query',
-        table_resource={
-            "tableReference": {
-                "projectId": PROJECT_ID,
-                "datasetId": BIGQUERY_DATASET,
-                "tableId": "zones_table",
-            },
-            "externalDataConfiguration": {
-                "sourceFormat": "PARQUET",
-                "sourceUris": [f"gs://{BUCKET}/raw/{data_file}"],
-            },
-        },
-    )
+    # upload_big_query_task = BigQueryCreateExternalTableOperator(
+    #     task_id='upload_big_query',
+    #     table_resource={
+    #         "tableReference": {
+    #             "projectId": PROJECT_ID,
+    #             "datasetId": BIGQUERY_DATASET,
+    #             "tableId": "zones_table",
+    #         },
+    #         "externalDataConfiguration": {
+    #             "sourceFormat": "PARQUET",
+    #             "sourceUris": [f"gs://{BUCKET}/raw/{data_file}"],
+    #         },
+    #     },
+    # )
     rm_temp = BashOperator(
         task_id = "remove_temporary_files",
         bash_command = f'rm {OUTPUT_TEMPLATE} {AIRFLOW_HOME}/{data_file}'

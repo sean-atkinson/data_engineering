@@ -55,20 +55,20 @@ with yellow_trip:
             "file_": f"{AIRFLOW_HOME}/{data_file}"
         }
     )
-    upload_big_query_task = BigQueryCreateExternalTableOperator(
-        task_id='upload_big_query',
-        table_resource={
-            "tableReference": {
-                "projectId": PROJECT_ID,
-                "datasetId": BIGQUERY_DATASET,
-                "tableId": "yellow_trips_table_2019_2020",
-            },
-            "externalDataConfiguration": {
-                "sourceFormat": "PARQUET",
-                "sourceUris": [f"gs://{BUCKET}/raw/{data_file}"],
-            },
-        },
-    )
+    # upload_big_query_task = BigQueryCreateExternalTableOperator(
+    #     task_id='upload_big_query',
+    #     table_resource={
+    #         "tableReference": {
+    #             "projectId": PROJECT_ID,
+    #             "datasetId": BIGQUERY_DATASET,
+    #             "tableId": "yellow_trips_table_2019_2020",
+    #         },
+    #         "externalDataConfiguration": {
+    #             "sourceFormat": "PARQUET",
+    #             "sourceUris": [f"gs://{BUCKET}/raw/{data_file}"],
+    #         },
+    #     },
+    # )
     rm_temp = BashOperator(
         task_id = "remove_temporary_files",
         bash_command = f'rm {OUTPUT_TEMPLATE} {AIRFLOW_HOME}/{data_file}'
